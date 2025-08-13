@@ -1,0 +1,117 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id             String          @id @default(uuid()) @db.Uuid
+  name           String          @unique @db.VarChar(255)
+  password       String          @db.VarChar(255)
+  sessions       Session[]
+  notes          Note[]
+  sessionMembers SessionMember[]
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+}
+
+model Session {
+  id             String          @id @default(uuid()) @db.Uuid
+  name           String          @db.VarChar(255)
+  userId         String          @db.Uuid
+  user           User            @relation(fields: [userId], references: [id])
+  videos         Video[]
+  animalListId   String          @db.Uuid
+  animalList     AnimalList      @relation(fields: [animalListId], references: [id])
+  sessionMembers SessionMember[]
+  totalVideos      Int           @default(0)
+  processedVideos  Int           @default(0)
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+}
+
+model Video {
+  id            String         @id @default(uuid()) @db.Uuid
+  url           String         @db.VarChar(255)
+  sessionId     String         @db.Uuid
+  session       Session        @relation(fields: [sessionId], references: [id])
+  hasAnimals    Boolean
+  frameStride   Int            @default(1)
+  totalFrames   Int
+  fps           Float
+  boundingBoxes BoundingBox[]
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+}
+
+model BoundingBox {
+  id           String           @id @default(uuid()) @db.Uuid
+  videoId      String           @db.Uuid
+  video        Video            @relation(fields: [videoId], references: [id])
+  time         Float
+  x0           Float
+  y0           Float
+  x1           Float
+  y1           Float
+  confidence   Float
+  noteRelation BoundingBoxNote?
+  createdAt    DateTime         @default(now())
+  updatedAt    DateTime         @updatedAt
+}
+
+model Note {
+  id               String           @id @default(uuid()) @db.Uuid
+  content          String           @db.VarChar(255)
+  animal           String           @db.VarChar(255)
+  userId           String           @db.Uuid
+  user             User             @relation(fields: [userId], references: [id])
+  boundingBoxNote  BoundingBoxNote?
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
+}
+
+model BoundingBoxNote {
+  id              String       @id @default(uuid()) @db.Uuid
+  boundingBoxId   String       @unique @db.Uuid
+  boundingBox     BoundingBox  @relation(fields: [boundingBoxId], references: [id])
+  noteId          String       @unique @db.Uuid
+  note            Note         @relation(fields: [noteId], references: [id])
+}
+
+model Animal {
+  id String @id @db.Uuid
+  name String @db.VarChar(255)
+  member animalMember[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+}
+
+model AnimalList {
+  id String @id @db.Uuid
+  name String @db.VarChar(255)
+  sessions Session[]
+  member animalMember[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+}
+
+model animalMember {
+  id String @id @db.Uuid 
+  animalId String @db.Uuid
+  animal Animal @relation(fields: [animalId], references: [id], onDelete: Cascade)
+  animalListId String @db.Uuid
+  animalList AnimalList @relation(fields: [animalListId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+}
+model SessionMember {
+  id         String   @id @default(uuid()) @db.Uuid
+  userId     String   @db.Uuid
+  user       User     @relation(fields: [userId], references: [id])
+  sessionId  String   @db.Uuid
+  session    Session  @relation(fields: [sessionId], references: [id])
+  createdAt  DateTime @default(now())
+}

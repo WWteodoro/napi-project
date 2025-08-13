@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Player de Sessão</title>
+  <link href="https://vjs.zencdn.net/8.3.0/video-js.css" rel="stylesheet" />
+  <style>
+    body {
+      display: flex;
+      font-family: Arial, sans-serif;
+      margin: 0;
+      height: 100vh;
+      background-color: #f9f9f9;
+    }
+    .player-container {
+      flex: 3;
+      position: relative;
+      background: #fff;
+      padding: 20px;
+      box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+      display: flex;
+      flex-direction: column;
+    }
+    #videoWrapper {
+      position: relative;
+      width: 100%;
+      max-height: 70vh;
+      height: 70vh; /* FORÇAR ALTURA FIXA */
+    }
+    .video-js {
+      width: 100%;
+      height: 100% !important; /* FORÇAR ALTURA PARA PRENDER NO WRAPPER */
+      position: relative;
+    }
+    canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 10;
+      pointer-events: none; /* evitar interferência */
+    }
+    #drawCanvas {
+      z-index: 11;
+    }
+    .video-controls {
+      margin-top: 10px;
+      display: flex;
+      gap: 10px;
+    }
+    .sidebar {
+      flex: 1;
+      padding: 20px;
+      background: #f4f4f4;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      overflow-y: auto;
+    }
+    .video-list {
+      list-style: none;
+      padding: 0;
+      max-height: 200px;
+      overflow-y: auto;
+      background: #fff;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    .video-list li {
+      cursor: pointer;
+      padding: 10px;
+      border-bottom: 1px solid #ccc;
+      transition: background 0.3s;
+    }
+    .video-list li:hover {
+      background: #e0e0e0;
+    }
+    select, button {
+      padding: 10px;
+      font-size: 16px;
+      border-radius: 5px;
+      border: 1px solid #ccc;
+      background: #fff;
+      cursor: pointer;
+    }
+    button {
+      background: #007bff;
+      color: white;
+    }
+    button:hover {
+      background: #0056b3;
+    }
+    button[disabled] {
+      opacity: 0.5;
+      cursor: default;
+    }
+  </style>
+</head>
+<body>
+  <div class="player-container">
+    <button onclick="location.href='dashboard.html'">← Voltar ao Dashboard</button>
+
+    <div id="videoWrapper">
+      <video
+        id="videoPlayer"
+        class="video-js vjs-default-skin"
+        controls
+        preload="auto"
+      ></video>
+      <canvas id="bboxCanvas"></canvas>
+      <canvas id="drawCanvas"></canvas>
+    </div>
+
+    <div class="video-controls">
+      <button id="btnPrev">⏮</button>
+      <button id="btnNext">⏭</button>
+      <button id="btnDraw">✏️</button>
+    </div>
+  </div>
+
+  <div class="sidebar">
+    <h3>Filtrar Vídeos</h3>
+    <select id="filtroAnimais">
+      <option value="todos">Todos</option>
+      <option value="com">Com Animal</option>
+      <option value="sem">Sem Animal</option>
+    </select>
+
+    <h3>Comentários</h3>
+    <select id="animalSelect"></select>
+    <button id="btnAddComment">Adicionar Comentário</button>
+
+    <h3>Estatísticas</h3>
+    <p>Vídeos processados: <span id="processados">0</span></p>
+    <p>Vídeos com animais: <span id="comAnimais">0</span></p>
+
+    <h3>Lista de Vídeos</h3>
+    <ul id="videoList" class="video-list"></ul>
+  </div>
+
+  <script src="https://vjs.zencdn.net/8.3.0/video.min.js"></script>
+  <script src="js/player.js"></script>
+</body>
+</html>
