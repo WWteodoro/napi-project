@@ -41,3 +41,7 @@ export interface ISessionAddFolderRequest{
     id: string;
     folder: string;
 }
+
+export interface ISessionDeleteRequest{
+    id: string
+}

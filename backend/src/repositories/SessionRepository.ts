@@ -9,6 +9,11 @@ import { processVideos } from "../utils/proccessVideos";
 const prisma = new PrismaClient();
 export class SessionRepository implements ISessionRepositoy{
     constructor(){}
+    async delete(id: string): Promise<void> {
+        const result = await prisma.session.findUnique({
+            where: { id }
+        })
+    }
     async findAll(): Promise<ISession[]> {
         const result = await prisma.session.findMany()
         return result

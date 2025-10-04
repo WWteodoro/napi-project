@@ -8,6 +8,7 @@ import { userAuthenticateRoute } from "./authRoute";
 import { videoRoute } from "./videoRoute";
 import { boxRoute } from "./boundingBoxRoute";
 import { animalMemberRoute } from "./animalMemberRoute";
+import { noteRoute } from "./noteRoute";
 
 export const route = express.Router();
 
@@ -20,3 +21,4 @@ route.use('/auth', userAuthenticateRoute);
 route.use('/video', videoRoute);
 route.use('/box', boxRoute);
 route.use('/animalMember', animalMemberRoute);
+route.use('/note', noteRoute);

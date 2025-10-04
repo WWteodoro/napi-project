@@ -127,8 +127,26 @@
     </select>
 
     <h3>Comentários</h3>
-    <select id="animalSelect"></select>
-    <button id="btnAddComment">Adicionar Comentário</button>
+<form id="commentForm">
+  <label for="animalSelect">Animal:</label><br/>
+  <select id="animalSelect" required></select><br/><br/>
+
+  <label for="quantity">Quantidade:</label><br/>
+  <input type="number" id="quantity" name="quantity" min="1" required /><br/><br/>
+
+  <label for="dateTime">Data e Hora:</label><br/>
+  <input type="datetime-local" id="dateTime" name="dateTime" required /><br/><br/>
+
+  <label for="location">Localização:</label><br/>
+  <input type="text" id="location" name="location" required /><br/><br/>
+
+  <label for="content">Comentário:</label><br/>
+  <textarea id="content" name="content" rows="3" required></textarea><br/><br/>
+
+  <button type="submit" id="btnAddComment">Adicionar Comentário</button>
+</form>
+<p id="selectedBoxInfo">Nenhuma box selecionada</p>
+
 
     <h3>Estatísticas</h3>
     <p>Vídeos processados: <span id="processados">0</span></p>

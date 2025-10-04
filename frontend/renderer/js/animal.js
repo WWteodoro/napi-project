@@ -121,7 +121,6 @@ async function loadAnimals(query = "") {
       const deleteBtn = document.createElement("button");
       deleteBtn.textContent = "Excluir";
       deleteBtn.addEventListener("click", async () => {
-        if (!confirm("Deseja realmente excluir este animal?")) return;
 
         try {
           const res = await fetch(`http://localhost:3333/animal/${animal.id}`, {

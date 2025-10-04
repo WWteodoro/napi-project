@@ -9,4 +9,5 @@ export interface ISessionRepositoy{
     getByName(name:string): Promise<ISession[]>
     getByUser(userId: string): Promise<ISession[]>
     addFolder(id: string, folder: string): Promise<void>
+    delete(id: string): Promise<void>
 }

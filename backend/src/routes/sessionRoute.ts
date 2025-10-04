@@ -8,6 +8,7 @@ import { GetSessionController } from "./controllers/session/GetSessionController
 import { ListSessionController } from "./controllers/session/ListSessionController";
 import { UpdateSessionController } from "./controllers/session/UpdateSessionController";
 import { resolveController } from "../adapters/resolverController";
+import { DeleteSessionController } from "./controllers/session/DeleteSessionController";
 
 export const sessionRoute = Router();
 
@@ -19,6 +20,7 @@ const getByUserSessionController = new GetByUserSessionController(sessionRepo)
 const getSessionController = new GetSessionController(sessionRepo)
 const listSessionController = new ListSessionController(sessionRepo)
 const updateSessionController = new UpdateSessionController(sessionRepo)
+const deleteSessionController = new DeleteSessionController(sessionRepo)
 
 sessionRoute.post('/:id', resolveController(async (req: Request, res: Response) => {
     return await addFolderSessionController.handle(req,res)
@@ -46,5 +48,9 @@ sessionRoute.get('/', resolveController(async (req: Request, res: Response) => {
 
 sessionRoute.put('/:id', resolveController(async (req: Request, res: Response) => {
     return await updateSessionController.handle(req,res)
+}))
+
+sessionRoute.delete('/:id', resolveController(async (req: Request, res: Response) => {
+    return await deleteSessionController.handle(req,res)
 }))
 

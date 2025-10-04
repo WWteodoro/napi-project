@@ -321,7 +321,6 @@ async function showMembersModal(list) {
       removeBtn.style.marginLeft = "10px";
       removeBtn.style.cursor = "pointer";
       removeBtn.addEventListener("click", async () => {
-        if (!confirm(`Remover o animal "${member.name}" da lista?`)) return;
         try {
           const resDel = await fetch(`http://localhost:3333/animalMember/${member.id}/list/${list.id}`, {
             method: "DELETE"
