@@ -6,7 +6,7 @@ export class UpdateNoteService{
     constructor(private noteRepo: INoteRepository){}
         async execute(props: INoteUpdateRequest): Promise<INote>{
             const result = await this.noteRepo.get(props.id)
-
+            console.log(props.animal)
             const note = new Note({
                 quantity: props.quantity || result.quantity,
                 dateTime: props.dateTime || result.dateTime,
@@ -16,6 +16,7 @@ export class UpdateNoteService{
                 userId: props.userId || result.userId,
                 boundingBoxId: props.boundingBoxId || result.boundingBoxId
             }, result.id)
+            console.log(note)
 
             const ret = await this.noteRepo.update(result.id, note.toJson())
 

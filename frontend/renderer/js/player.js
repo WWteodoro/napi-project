@@ -46,7 +46,12 @@ document.addEventListener("DOMContentLoaded", () => {
   // Busca animais da sessão
   async function fetchSessionAnimals() {
     try {
-      const arr = await (await fetch(`http://localhost:3333/animalMember/list/${sessionId}`)).json();
+    // 1. Buscar a sessão e obter o animalListId
+    const session = await (await fetch(`http://localhost:3333/session/${sessionId}`)).json();
+    const animalListId = session.animalListId || session.animalList?.id;
+
+    if (!animalListId) throw new Error("animalListId não encontrado");
+      const arr = await (await fetch(`http://localhost:3333/animalMember/list/${animalListId}`)).json();
       animalSelect.innerHTML = "";
       arr.forEach(a => {
         const opt = document.createElement("option");

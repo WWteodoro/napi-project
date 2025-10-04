@@ -76,7 +76,7 @@ export class AnimalMemberRepository implements IAnimalMemberRepository{
     const members = await prisma.animalMember.findMany({
         where: { animalListId: animalListId }
     });
-
+    console.log("linha 79", members)
     // 2. Extrair os IDs dos animais
     const animalIds = members.map(member => member.animalId);
 

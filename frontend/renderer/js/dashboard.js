@@ -72,6 +72,7 @@ async function enviarPastaParaAPI(sectionId, folderPath) {
     if (!response.ok) throw new Error(`Erro na requisição: ${response.statusText}`);
     
   } catch (error) {
+    console.error('Erro ao enviar pasta:', error);
   }
 }
 
@@ -88,15 +89,14 @@ createSectionForm.addEventListener('submit', async (event) => {
   try {
     const response = await fetch('http://localhost:3333/session', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
+      headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ name, userId, animalListId })
     });
 
     if (response.ok) {
       window.location.href = 'dashboard.html';
     } else {
+      console.error('Erro ao criar seção');
     }
   } catch (error) {
     console.error('Erro na requisição:', error);
@@ -166,13 +166,12 @@ async function carregarSessoes() {
 
       // Conteúdo do card
       card.innerHTML = `
-  <h3>${sessao.name}</h3>
-  <p>${progressoTexto}</p>
-  <div class="progress-container">
-    <div class="progress-bar" style="width: ${porcentagem}%"></div>
-  </div>
-`;
-
+        <h3>${sessao.name}</h3>
+        <p>${progressoTexto}</p>
+        <div class="progress-container">
+          <div class="progress-bar" style="width: ${porcentagem}%"></div>
+        </div>
+      `;
 
       // Botão "Selecionar Pasta"
       const btnSelecionarPasta = document.createElement('button');
@@ -181,8 +180,52 @@ async function carregarSessoes() {
         e.stopPropagation(); // impede redirecionamento
         selecionarPasta(sessao.id);
       });
-
       card.appendChild(btnSelecionarPasta);
+
+      // Botão "Excluir Sessão"
+const btnExcluir = document.createElement('button');
+btnExcluir.textContent = 'Excluir Sessão';
+btnExcluir.classList.add('delete-btn'); // <- adiciona a classe para ficar vermelho
+btnExcluir.addEventListener('click', async (e) => {
+  e.stopPropagation();
+  try {
+    const resp = await fetch(`http://localhost:3333/session/${sessao.id}`, { method: 'DELETE' });
+    if (resp.ok) card.remove();
+    else console.error('Erro ao deletar sessão');
+  } catch (err) {
+    console.error('Erro ao deletar sessão:', err);
+  }
+});
+card.appendChild(btnExcluir);
+
+
+      // Botão "Exportar CSV da Sessão"
+      const btnExportar = document.createElement('button');
+      btnExportar.textContent = 'Exportar CSV';
+      btnExportar.addEventListener('click', async (e) => {
+        e.stopPropagation();
+        try {
+          const resp = await fetch(`http://localhost:3333/note/csv/${sessao.id}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' }
+          });
+          if (resp.ok) {
+            const blob = await resp.blob();
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `sessao-${sessao.id}.csv`;
+            a.click();
+            URL.revokeObjectURL(url);
+          } else {
+            console.error('Erro ao exportar CSV da sessão');
+          }
+        } catch (err) {
+          console.error('Erro ao exportar CSV da sessão:', err);
+        }
+      });
+      card.appendChild(btnExportar);
+
       sections.appendChild(card);
     });
   } catch (error) {
@@ -191,23 +234,39 @@ async function carregarSessoes() {
   }
 }
 
-
-
 window.addEventListener('DOMContentLoaded', () => {
   carregarSessoes();
   setInterval(carregarSessoes, 5000); // Atualiza a cada 5 segundos
-
 });
 
 // Selecionar pasta e enviar para API
 async function selecionarPasta(sectionId) {
   const folderPath = await window.api.selectFolder();
-  
-  if (folderPath) {
-    enviarPastaParaAPI(sectionId, folderPath);
-  } else {
-  }
+  if (folderPath) enviarPastaParaAPI(sectionId, folderPath);
 }
 
-
-
+// --- Botão exportar CSV de todas as sessões ---
+const btnExportAll = document.createElement('button');
+btnExportAll.textContent = 'Exportar todas as sessões';
+btnExportAll.id = 'export-all';
+btnExportAll.style.position = 'fixed';
+btnExportAll.style.bottom = '20px';
+btnExportAll.style.right = '20px';
+btnExportAll.style.zIndex = 1000;
+btnExportAll.addEventListener('click', async () => {
+  try {
+    const resp = await fetch(`http://localhost:3333/note/csv`, { method: 'POST', headers: { 'Content-Type': 'application/json' } });
+    if (resp.ok) {
+      const blob = await resp.blob();
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `todas-sessoes.csv`;
+      a.click();
+      URL.revokeObjectURL(url);
+    } else console.error('Erro ao exportar CSV total');
+  } catch (err) {
+    console.error('Erro ao exportar CSV total:', err);
+  }
+});
+document.body.appendChild(btnExportAll);

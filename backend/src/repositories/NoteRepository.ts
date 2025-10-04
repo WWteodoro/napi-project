@@ -19,6 +19,7 @@ import { AppError } from "../errors/AppError";
         }
 
         async getByBox(boundingBoxId: string): Promise<INote> {
+            console.log(boundingBoxId)
             const result = await prisma.note.findUnique({
                 where: {boundingBoxId}
             })
@@ -62,6 +63,7 @@ import { AppError } from "../errors/AppError";
         }
 
     async update(id: string, props: INote): Promise<INote> {
+        console.log("here")
             const result = await prisma.note.update({
                 where: {id},
                 data: props

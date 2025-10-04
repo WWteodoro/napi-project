@@ -36,7 +36,7 @@ noteRoute.post('/csv/:sessionId', resolveController(async (req: Request, res: Re
     return await exportLightCSVController.handle(req, res)
 }))
 
-noteRoute.get('/box/:boxId', resolveController(async (req: Request, res: Response) => {
+noteRoute.get('/box/:boundingBoxId', resolveController(async (req: Request, res: Response) => {
     return await getNoteByBoxController.handle(req, res)
 }))
 
