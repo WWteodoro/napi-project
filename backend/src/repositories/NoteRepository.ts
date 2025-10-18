@@ -18,32 +18,9 @@ import { AppError } from "../errors/AppError";
             return result
         }
 
-        async getByBox(boundingBoxId: string): Promise<INote> {
-            console.log(boundingBoxId)
-            const result = await prisma.note.findUnique({
-                where: {boundingBoxId}
-            })
-
-            if(!result) throw new AppError("note not found")
-
-            return result
-        }
-
         async listByvideo(videoId: string): Promise<INote[]> {
             const notes = await prisma.note.findMany({
-                where: {
-                boundingBox: {
-                    videoId: videoId
-                }
-                },
-                include: {
-                boundingBox: {
-                    include: {
-                    video: true
-                    }
-                },
-                user: true 
-                }
+                where: {videoId : videoId}
     });
         return notes;
     }
@@ -75,19 +52,10 @@ import { AppError } from "../errors/AppError";
     async listBySession(sessionId: string): Promise<INote[]> {
         const notes = await prisma.note.findMany({
             where: {
-            boundingBox: {
-                video: {
+            video: {
                 sessionId: sessionId
-                }
+                
             }
-            },
-            include: {
-            boundingBox: {
-                include: {
-                video: true
-                }
-            },
-            user: true 
             }
         });
 
@@ -96,82 +64,72 @@ import { AppError } from "../errors/AppError";
 
     async exportFullyCSV(): Promise<string> {
         const notes = await prisma.note.findMany({
-            include: {
-            boundingBox: {
-                include: {
-                video: true
-                }
-            }
-            }
-        });
+    include: {
+      video: true
+    }
+  });
 
-        const csvHeader = 'quantity,dateTime,location,content,animal,videoFileName\n';
+  const csvHeader = 'quantity,dateTime,location,content,animal,videoFileName\n';
 
-        const csvRows = notes.map(note => {
-            const videoFileName = note.boundingBox?.video?.url ?? '';
-            return [
-            note.quantity,
-            note.dateTime,
-            note.location,
-            note.content,
-            note.animal,
-            videoFileName
-            ].map(field => `"${field}"`).join(',');
-        });
+  const csvRows = notes.map(note => {
+    const videoFileName = note.video?.url ?? '';
+    return [
+      note.quantity,
+      note.dateTime,
+      note.location,
+      note.content,
+      note.animal,
+      videoFileName
+    ].map(field => `"${field}"`).join(',');
+  });
 
-        const csvContent = csvHeader + csvRows.join('\n');
+  const csvContent = csvHeader + csvRows.join('\n');
 
-        const exportDir = path.resolve(__dirname, 'exports');
-        await fs.mkdir(exportDir, { recursive: true });
+  const exportDir = path.resolve(__dirname, 'exports');
+  await fs.mkdir(exportDir, { recursive: true });
 
-        const filePath = path.join(exportDir, 'notes.csv');
-        await fs.writeFile(filePath, csvContent, 'utf-8');
+  const filePath = path.join(exportDir, 'notes.csv');
+  await fs.writeFile(filePath, csvContent, 'utf-8');
 
-        return filePath;
+  return filePath;
         }
 
 
      async  exportLightCSV(sessionId: string): Promise<string> {
         const notes = await prisma.note.findMany({
-            where: {
-            boundingBox: {
-                video: {
-                sessionId: sessionId
-                }
-            }
-            },
-            include: {
-            boundingBox: {
-                include: {
-                video: true
-                }
-            }
-            }
-        });
+    where: {
+      video: {
+        sessionId: sessionId
+      }
+    },
+    include: {
+      video: true
+    }
+  });
 
-    const csvHeader = 'quantity,dateTime,location,content,animal,videoFileName\n';
+  const csvHeader = 'quantity,dateTime,location,content,animal,videoFileName\n';
 
-    const csvRows = notes.map(note => {
-        const videoFileName = note.boundingBox?.video?.url ?? ''; 
-        return [
-        note.quantity,
-        note.dateTime,
-        note.location,
-        note.content,
-        note.animal,
-        videoFileName
-        ].map(field => `"${field}"`).join(',');
-    });
+  const csvRows = notes.map(note => {
+    const videoFileName = note.video?.url ?? '';
+    return [
+      note.quantity,
+      note.dateTime,
+      note.location,
+      note.content,
+      note.animal,
+      videoFileName
+    ].map(field => `"${field}"`).join(',');
+  });
 
-        const csvContent = csvHeader + csvRows.join('\n');
+  const csvContent = csvHeader + csvRows.join('\n');
 
-        const exportDir = path.resolve(__dirname, 'exports');
-        await fs.mkdir(exportDir, { recursive: true });
+  const exportDir = path.resolve(__dirname, 'exports');
+  await fs.mkdir(exportDir, { recursive: true });
 
-        const filePath = path.join(exportDir, `notes-session-${sessionId}.csv`);
-        await fs.writeFile(filePath, csvContent, 'utf-8');
+  const filePath = path.join(exportDir, `notes-session-${sessionId}.csv`);
+  await fs.writeFile(filePath, csvContent, 'utf-8');
 
-        return filePath;
+  return filePath;
         }
                 
 }

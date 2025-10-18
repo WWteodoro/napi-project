@@ -9,7 +9,8 @@ export class Note{
     content: INote['content'];
     animal: INote['animal'];
     userId: INote['userId'];
-    boundingBoxId: INote['boundingBoxId'];
+    videoId: INote['videoId'];
+    time: INote['time']
     createdAt?: INote['createdAt'];
     updatedAt?: INote['updatedAt'];
 
@@ -21,7 +22,8 @@ export class Note{
         this.content = props.content || " ";
         this.animal = props.animal;
         this.userId = props.userId;
-        this.boundingBoxId = props.boundingBoxId;
+        this.videoId = props.videoId;
+        this.time = props.time
         this.createdAt = props.createdAt || new Date();
         this.updatedAt = new Date();
     }
@@ -35,7 +37,8 @@ export class Note{
             content: this.content,
             animal: this.animal,
             userId: this.userId,
-            boundingBoxId: this.boundingBoxId,
+            videoId: this.videoId,
+            time: this.time,
             createdAt: this.createdAt,
             updatedAt: this.updatedAt
         }

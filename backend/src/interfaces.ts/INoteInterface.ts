@@ -5,8 +5,9 @@ export interface INote{
     location: string;
     content: string;
     animal: string;
+    time: number[];
     userId: string;
-    boundingBoxId: string;
+    videoId: string;
     createdAt?: Date;
     updatedAt?: Date;
 }
@@ -17,8 +18,9 @@ export interface INoteCreateRequest{
     location: string;
     content: string;
     animal: string;
+    time: number[];
     userId: string;
-    boundingBoxId: string;
+    videoId: string;
 }
 
 export interface INoteUpdateRequest{
@@ -28,8 +30,9 @@ export interface INoteUpdateRequest{
     location: string;
     content: string;
     animal: string;
+    time: number[]
     userId: string;
-    boundingBoxId: string;
+    videoId: string;
 }
 
 export interface INoteListByVideo{
@@ -49,5 +52,5 @@ export interface INoteGetRequest{
 }
 
 export interface INoteGetByBoxRequest{
-    boundingBoxId: string
+    time: number[]
 }

@@ -14,7 +14,8 @@ export class UpdateNoteService{
                 content: props.content || result.content,
                 animal: props.animal || result.animal,
                 userId: props.userId || result.userId,
-                boundingBoxId: props.boundingBoxId || result.boundingBoxId
+                time: props.time || result.time,
+                videoId: props.videoId || result.videoId
             }, result.id)
             console.log(note)
 

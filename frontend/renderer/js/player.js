@@ -20,6 +20,7 @@ document.addEventListener("DOMContentLoaded", () => {
   let videos = [], boxes = [], currentIndex = 0;
   let drawing = false, start = null, drawBox = null;
   let selectedBoxId = null;
+  let currentComment = null; // 🔹 armazena comentário atual
 
   function resizeCanvases() {
     const wrapper = document.getElementById("videoWrapper");
@@ -46,11 +47,10 @@ document.addEventListener("DOMContentLoaded", () => {
   // Busca animais da sessão
   async function fetchSessionAnimals() {
     try {
-    // 1. Buscar a sessão e obter o animalListId
-    const session = await (await fetch(`http://localhost:3333/session/${sessionId}`)).json();
-    const animalListId = session.animalListId || session.animalList?.id;
+      const session = await (await fetch(`http://localhost:3333/session/${sessionId}`)).json();
+      const animalListId = session.animalListId || session.animalList?.id;
 
-    if (!animalListId) throw new Error("animalListId não encontrado");
+      if (!animalListId) throw new Error("animalListId não encontrado");
       const arr = await (await fetch(`http://localhost:3333/animalMember/list/${animalListId}`)).json();
       animalSelect.innerHTML = "";
       arr.forEach(a => {
@@ -111,7 +111,31 @@ document.addEventListener("DOMContentLoaded", () => {
       console.error("Erro ao buscar boxes:", e);
       boxes = [];
     }
-    fetchComments(v.id);
+    fetchComments(v.id); // 🔹 busca comentário do vídeo
+  }
+
+  async function fetchComments(videoId) {
+    try {
+      const res = await fetch(`http://localhost:3333/note/video/${videoId}`);
+      const arr = await res.json();
+
+      if (arr && arr.length > 0) {
+        currentComment = arr[0];
+        document.getElementById("content").value = currentComment.content || "";
+        document.getElementById("quantity").value = currentComment.quantity || 1;
+        document.getElementById("location").value = currentComment.location || "";
+        document.getElementById("time").value = currentComment.time ? currentComment.time.join(", ") : "";
+        document.getElementById("animalSelect").value = currentComment.animal || "";
+      } else {
+        currentComment = null;
+        document.getElementById("content").value = "";
+        document.getElementById("quantity").value = 1;
+        document.getElementById("location").value = "";
+        document.getElementById("time").value = "";
+      }
+    } catch (err) {
+      console.error("Erro ao buscar comentário:", err);
+    }
   }
 
   function drawBoxes() {
@@ -206,58 +230,55 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   // Comentários
-  async function fetchComments(videoId) {
-    let container = document.getElementById("commentsContainer");
-    if (!container) {
-      container = document.createElement("div");
-      container.id = "commentsContainer";
-      container.style.marginTop = "10px";
-      container.style.maxHeight = "200px";
-      container.style.overflowY = "auto";
-      container.style.background = "#fff";
-      container.style.padding = "8px";
-      container.style.border = "1px solid #ccc";
-      container.style.borderRadius = "5px";
-      document.querySelector(".sidebar").appendChild(container);
-    }
-    const arr = await (await fetch(`http://localhost:3333/note/video/${videoId}`)).json();
-    container.innerHTML = "";
-    arr.forEach(c => {
-      const p = document.createElement("p");
-      p.textContent = `[${c.dateTime}] ${c.userId} (${c.animal}): ${c.content} - qtd: ${c.quantity}`;
-      container.appendChild(p);
-    });
-  }
-
   btnAdd.addEventListener("click", async () => {
-    if (!selectedBoxId) return alert("Selecione uma bounding box primeiro!");
-
     const animal = animalSelect.value;
-    const quantity = prompt("Quantidade:") || 1;
-    const content = prompt("Comentário:");
-    const location = prompt("Localização:") || "desconhecida";
+    const quantity = document.getElementById("quantity")?.value || 1;
+    const content = document.getElementById("content")?.value?.trim() || "";
+    const location = document.getElementById("location")?.value?.trim() || "desconhecida";
     const dateTime = new Date().toLocaleString();
     const userId = localStorage.getItem("userid") || "anon";
+    const videoId = videos[currentIndex]?.id;
+
+    if (!videoId) {
+      return;
+    }
+
+    const timeInput = document.getElementById("time")?.value?.trim();
+    const time = timeInput
+      ? timeInput.split(",").map(t => parseFloat(t.trim())).filter(t => !isNaN(t))
+      : [player.currentTime()];
 
     const commentData = {
-      videoId: videos[currentIndex].id,
+      videoId,
       quantity: Number(quantity),
       dateTime,
       location,
       content,
       animal,
       userId,
-      boundingBoxId: selectedBoxId
+      time
     };
 
     try {
-      const res = await fetch("http://localhost:3333/note", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(commentData)
-      });
-      if (!res.ok) throw new Error("Falha ao enviar comentário");
-      fetchComments(videos[currentIndex].id);
+      let res;
+      if (currentComment) {
+        // 🔹 Atualiza se já existir
+        res = await fetch(`http://localhost:3333/note/${currentComment.id}`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(commentData)
+        });
+      } else {
+        // 🔹 Cria novo se não existir
+        res = await fetch("http://localhost:3333/note", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(commentData)
+        });
+      }
+
+      if (!res.ok) throw new Error("Falha ao salvar comentário");
+      fetchComments(videoId);
     } catch (err) {
       console.error("Erro ao enviar comentário:", err);
     }

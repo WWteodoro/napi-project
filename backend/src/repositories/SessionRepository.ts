@@ -13,6 +13,10 @@ export class SessionRepository implements ISessionRepositoy{
         const result = await prisma.session.findUnique({
             where: { id }
         })
+
+        await prisma.session.delete({
+            where:{ id }
+        })
     }
     async findAll(): Promise<ISession[]> {
         const result = await prisma.session.findMany()

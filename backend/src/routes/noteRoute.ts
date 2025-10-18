@@ -3,7 +3,6 @@ import { NoteRepository } from "../repositories/NoteRepository";
 import { CreateNoteController } from "./controllers/note/CreateNoteController";
 import { ExportFullyCSVController } from "./controllers/note/ExportFullyCSVController";
 import { ExportLightCSVController } from "./controllers/note/ExportLightCSVController";
-import { GetNoteByBoxController } from "./controllers/note/GetNoteByBoxController";
 import { GetNoteController } from "./controllers/note/GetNoteController";
 import { ListBySessionNoteController } from "./controllers/note/ListBySessionNoteController";
 import { ListByVideoNoteController } from "./controllers/note/ListByVideoNoteController";
@@ -17,7 +16,6 @@ const noteRepo = new NoteRepository();
 const createNoteController = new CreateNoteController(noteRepo)
 const exportFullyCSVController = new ExportFullyCSVController(noteRepo)
 const exportLightCSVController = new ExportLightCSVController(noteRepo)
-const getNoteByBoxController = new GetNoteByBoxController(noteRepo)
 const getNoteController = new GetNoteController(noteRepo)
 const listBySessionNoteController = new ListBySessionNoteController(noteRepo)
 const listByVideoNoteController = new ListByVideoNoteController(noteRepo)
@@ -34,10 +32,6 @@ noteRoute.post('/csv/', resolveController(async (req: Request, res: Response) =>
 
 noteRoute.post('/csv/:sessionId', resolveController(async (req: Request, res: Response) => {
     return await exportLightCSVController.handle(req, res)
-}))
-
-noteRoute.get('/box/:boundingBoxId', resolveController(async (req: Request, res: Response) => {
-    return await getNoteByBoxController.handle(req, res)
 }))
 
 noteRoute.get('/:id', resolveController(async (req: Request, res: Response) => {

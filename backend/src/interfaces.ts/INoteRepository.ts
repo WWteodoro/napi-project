@@ -9,5 +9,4 @@ export interface INoteRepository{
     exportFullyCSV():Promise<string>
     exportLightCSV(sessionId:string):Promise<string>
     get(id:string):Promise<INote>
-    getByBox(boundingBoxId:string): Promise<INote>
 }

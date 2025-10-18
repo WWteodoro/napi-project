@@ -5,10 +5,10 @@ import { CreateNoteService } from "../../../services/NoteService/CreateNoteServi
 export class CreateNoteController {
     constructor(private noteRepo: INoteRepository){}
     async handle(req: Request, res: Response): Promise<Response>{
-        const {quantity, dateTime, location, content, animal, userId, boundingBoxId} = req.body;
+        const {quantity, dateTime, location, content, animal, userId, videoId, time} = req.body;
 
         const createNoteService = new CreateNoteService(this.noteRepo)
-        const result = await createNoteService.execute({quantity, dateTime, location, content, animal, userId, boundingBoxId})
+        const result = await createNoteService.execute({quantity, dateTime, location, content, animal, userId, videoId, time})
 
         return res.status(201).json(result)
     }

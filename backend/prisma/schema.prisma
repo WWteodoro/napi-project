@@ -25,7 +25,7 @@ model Session {
   user           User            @relation(fields: [userId], references: [id])
   videos         Video[]
   animalListId   String          @db.Uuid
-  animalList     AnimalList      @relation(fields: [animalListId], references: [id])
+  animalList     AnimalList      @relation(fields: [animalListId], references: [id], onDelete: Cascade)
   sessionMembers SessionMember[]
   totalVideos      Int           @default(0)
   processedVideos  Int           @default(0)
@@ -37,12 +37,13 @@ model Video {
   id            String         @id @default(uuid()) @db.Uuid
   url           String         @db.VarChar(255)
   sessionId     String         @db.Uuid
-  session       Session        @relation(fields: [sessionId], references: [id])
+  session       Session        @relation(fields: [sessionId], references: [id], onDelete: Cascade)
   hasAnimals    Boolean
   frameStride   Int            @default(1)
   totalFrames   Int
   fps           Float
   boundingBoxes BoundingBox[]
+  noteRelation Note?
   createdAt     DateTime       @default(now())
   updatedAt     DateTime       @updatedAt
 }
@@ -50,14 +51,13 @@ model Video {
 model BoundingBox {
   id           String           @id @default(uuid()) @db.Uuid
   videoId      String           @db.Uuid
-  video        Video            @relation(fields: [videoId], references: [id])
+  video        Video            @relation(fields: [videoId], references: [id], onDelete: Cascade)
   time         Float
   x0           Float
   y0           Float
   x1           Float
   y1           Float
   confidence   Float
-  noteRelation Note?
   createdAt    DateTime         @default(now())
   updatedAt    DateTime         @updatedAt
 }
@@ -70,9 +70,10 @@ model Note {
   content          String           @db.VarChar(255)
   animal           String           @db.VarChar(255)
   userId           String           @db.Uuid
-  user             User             @relation(fields: [userId], references: [id])
-  boundingBoxId   String       @unique @db.Uuid
-  boundingBox     BoundingBox  @relation(fields: [boundingBoxId], references: [id])
+  time             Float[]
+  user             User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  videoId          String           @unique @db.Uuid
+  video            Video          @relation(fields: [videoId], references: [id], onDelete: Cascade)
   createdAt        DateTime         @default(now())
   updatedAt        DateTime         @updatedAt
 }
@@ -108,6 +109,6 @@ model SessionMember {
   userId     String   @db.Uuid
   user       User     @relation(fields: [userId], references: [id])
   sessionId  String   @db.Uuid
-  session    Session  @relation(fields: [sessionId], references: [id])
+  session    Session  @relation(fields: [sessionId], references: [id], onDelete: Cascade)
   createdAt  DateTime @default(now())
 }
