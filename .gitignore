@@ -1,0 +1,31 @@
+# Bloqueia essas pastas em qualquer lugar do projeto
+node_modules/
+dist/
+build/
+.env
+# Ignora binários e versões compiladas do Electron
+release/
+
+# Ignora planilhas CSV geradas pelo sistema
+backend/src/repositories/exports/
+*.csv
+
+# Ignora dependências e builds do backend
+backend/dist/
+backend/node_modules/
+
+# Ignora variáveis de ambiente (CRÍTICO PARA SEGURANÇA)
+backend/.env
+
+
+# Ignora pastas de arquivos gerados/temporários do frontend
+frontend/exports/
+frontend/resources/
+frontend/release/
+frontend/node_modules/
+
+yolo_animal_detection/build/
+yolo_animal_detection/dist/
+yolo_animal_detection/__pycache__
+yolo_animal_detection/*.pyc
+yolo_animal_detection/venv

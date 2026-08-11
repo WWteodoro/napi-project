@@ -1,0 +1,58 @@
+{
+  "name": "napi-frontend",
+  "version": "1.0.0",
+  "description": "Frontend Napi",
+  "main": "main.js",
+  "author": "William Wallace",
+  "license": "ISC",
+  "scripts": {
+    "start": "electron .",
+    "build": "electron-builder"
+  },
+  "devDependencies": {
+    "electron": "^25.0.0",
+    "electron-builder": "^26.0.12"
+  },
+  "dependencies": {
+    "dotenv": "^16.4.5"
+  },
+  "build": {
+    "appId": "com.napi.app",
+    "productName": "NapiApp",
+    "directories": {
+      "output": "release",
+      "buildResources": "assets"
+    },
+    "files": [
+      "main.js",
+      "renderer/**/*"
+    ],
+    "extraResources": [
+      {
+        "from": "../backend",
+        "to": "backend",
+        "filter": [
+          "dist/**/*",
+          "node_modules/**/*",
+          "prisma/**/*",
+          "package.json",
+          "dev.db"
+        ]
+      },
+      {
+        "from": "resources/",
+        "to": "."
+      }
+    ],
+    "win": {
+      "target": "nsis",
+      "icon": "icon.ico"
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowElevation": true,
+      "allowToChangeInstallationDirectory": true
+    }
+  }
+}

@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Player de Sessão</title>
+  <link href="https://vjs.zencdn.net/8.3.0/video-js.css" rel="stylesheet" />
+  <link rel="stylesheet" href="css/player.css"> </head>
+
+<body>
+  <div class="player-container">
+    <button onclick="location.href='dashboard.html'">← Voltar ao Dashboard</button>
+
+    <div id="videoWrapper">
+      <video
+        id="videoPlayer"
+        class="video-js vjs-default-skin"
+        controls
+        preload="auto"
+      ></video>
+      <canvas id="bboxCanvas"></canvas>
+      <canvas id="drawCanvas"></canvas>
+    </div>
+
+    <div class="video-controls">
+      <button id="btnPrev">⏮</button>
+      <button id="btnNext">⏭</button>
+      <button id="btnDraw">✏️</button>
+    </div>
+    
+    <div class="video-list-container">
+      <h3>Lista de Vídeos</h3>
+      <ul id="videoList" class="video-list">
+        </ul>
+    </div>
+  </div>
+
+  <div class="sidebar">
+    <h3>Filtrar Vídeos</h3>
+    <select id="filtroAnimais">
+      <option value="todos">Todos</option>
+      <option value="com">Com Animal</option>
+      <option value="sem">Sem Animal</option>
+      <option value="com-anotado">Com Animal e Anotados</option>
+      <option value="com-nao-anotado">Com Animal e Não Anotados</option>
+    </select>
+
+    <h3>Comentários</h3>
+    <form id="commentForm">
+      <label for="animalSelect">Animal:</label><br/>
+      <select id="animalSelect" required></select><br/><br/>
+
+      <label for="quantity">Quantidade:</label><br/>
+      <input type="number" id="quantity" name="quantity" min="1" required /><br/><br/>
+
+      <label for="dateTime">Data e Hora:</label><br/>
+      <input type="datetime-local" id="dateTime" name="dateTime" required /><br/><br/>
+
+      <label for="content">Comentário:</label><br/>
+      <textarea id="content" name="content" rows="3" required></textarea><br/><br/>
+
+      <label for="time">Tempos (segundos, separados por vírgula):</label><br/>
+      <input type="text" id="time" name="time" placeholder="Ex: 1.5, 3.2, 7.0" /><br/><br/>
+
+      <button type="button" id="btnAddComment">Adicionar Comentário</button>
+    </form>
+
+    <h3>Estatísticas</h3>
+    <p>Vídeos processados: <span id="processados">0</span></p>
+    <p>Vídeos com animais: <span id="comAnimais">0</span></p>
+    <button id="btnDeleteNoAnimals" class="danger-btn" style="background-color: #dc3545; color: white; margin-top: 15px;">
+      🗑️ Excluir vídeos SEM animais
+    </button>
+
+    </div>
+
+  <script src="https://vjs.zencdn.net/8.3.0/video.min.js"></script>
+  <script src="js/player.js"></script>
+</body>
+</html>

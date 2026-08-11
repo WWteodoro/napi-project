@@ -1,0 +1,17 @@
+import { Request, Response } from "express";
+import { INoteRepository } from "../../../interfaces.ts/INoteRepository";
+import { UpdateNoteService } from "../../../services/NoteService/UpdateNoteService";
+
+export class UpdateNoteController{
+    constructor(private noteRepo: INoteRepository){}
+    async handle(req: Request, res: Response): Promise<Response>{
+        const { id } = req.params;
+        const {quantity, dateTime, content, animal, userId, videoId, time} = req.body;
+        
+        const updateNoteService = new UpdateNoteService(this.noteRepo)
+        const result = await updateNoteService.execute({id, quantity: quantity, dateTime, content, animal, userId, videoId, time})
+
+        return res.status(201).json(result)
+
+    }
+}

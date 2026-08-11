@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>Animais</title>
+  <link rel="stylesheet" href="css/animal.css" />
+  <script defer src="js/animal.js"></script>
+</head>
+<body>
+  <div class="sidebar">
+    <h2>Menu</h2>
+    <ul>
+      <li><a href="dashboard.html">Início</a></li>
+      <li><a href="animal-lists.html">Listas de Animais</a></li>
+      <li><a href="animal.html" class="active">Gerenciar Animais</a></li>
+    </ul>
+  </div>
+
+  <div class="content">
+    <h1>Gerenciamento de Animais</h1>
+
+    <div class="search-bar">
+      <input type="text" id="searchInput" placeholder="Buscar animal por nome..." />
+      <button id="searchButton">Buscar</button>
+    </div>
+
+    <form id="newAnimalForm">
+      <input type="text" id="name" placeholder="Nome do animal" required />
+      <button type="submit">Cadastrar Animal</button>
+    </form>
+
+    <ul id="animalList"></ul>
+  </div>
+</body>
+</html>

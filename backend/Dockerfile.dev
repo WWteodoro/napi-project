@@ -1,0 +1,15 @@
+FROM node:16
+RUN NODE_ENV=development
+WORKDIR /app
+
+COPY package.json yarn.lock ./
+COPY prisma ./prisma/
+COPY . .
+
+RUN yarn install --frozen-lockfile
+RUN yarn prisma generate
+RUN yarn build
+
+EXPOSE 3030
+
+CMD ["yarn", "dev"]

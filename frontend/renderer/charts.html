@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Relatórios e Análises</title>
+  <link rel="stylesheet" href="css/charts.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+  <div class="header-bar">
+    <button id="btn-back" class="btn-back">← Voltar às Câmeras</button>
+    <h2>📊 Análise de Fauna</h2>
+  </div>
+
+  <div class="main-container">
+    <div class="tabs">
+      <button class="tab-btn active" data-target="abundancia">Abundância de Espécies</button>
+      <button class="tab-btn" data-target="relogio">Relógio Biológico</button>
+      <button class="tab-btn" data-target="frequencia">Frequência por Câmera</button>
+      <button class="tab-btn" data-target="tendencia">Tendência Sazonal</button>
+    </div>
+
+    <div class="chart-wrapper">
+      <canvas id="analyticsChart"></canvas>
+    </div>
+  </div>
+
+  <script src="js/charts.js"></script>
+</body>
+</html>

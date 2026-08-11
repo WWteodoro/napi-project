@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Dashboard</title>
+  <link rel="stylesheet" href="css/dashboard.css" />
+</head>
+<body>
+  <!-- Botão hamburguer único -->
+  <button id="menu-button" class="menu-button">☰</button>
+
+  <div class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <h2 id="user-greeting">Olá</h2>
+    </div>
+    <ul>
+      <li><a href="animal-lists.html" id="animal-lists-link">Listas de Animais</a></li>
+      <li><a href="animal.html" id="animal-management-link">Gerenciar Animais</a></li> <!-- Novo botão -->
+      <li><button id="login-logout-btn">Entrar</button></li>
+    </ul>
+  </div>
+
+  <div class="main-content" id="main-content">
+    <div class="header">
+      <button id="create-section">Cadastrar novo lugar</button>
+      <!-- NOVO BOTÃO AQUI -->
+      <button id="btn-reset-data" style="background-color: #e74c3c; margin-left: 15px;">⚠️ Resetar Banco</button>
+    </div>
+    <div class="sections" id="sections">
+      <p>Não há lugares cadastrados</p>
+    </div>
+  </div>
+
+  <!-- Modal para criar seção -->
+  <div id="create-section-modal" class="modal" style="display:none;">
+    <div class="modal-content">
+      <span id="close-modal" class="close-button">&times;</span>
+      <h2>Cadastrar lugar</h2>
+      <form id="create-section-form">
+        <label for="section-name">Nome do Lugar:</label><br/>
+        <input type="text" id="section-name" name="section-name" required /><br/><br/>
+        
+          <!-- Opções vão ser inseridas pelo JS -->
+        </select><br/><br/>
+        
+        <button type="submit">Cadastrar Lugar</button>
+      </form>
+    </div>
+  </div>
+  
+
+  <script src="js/dashboard.js"></script>
+</body>
+</html>

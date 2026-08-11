@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Câmeras da Sessão</title>
+  <link rel="stylesheet" href="css/session.css" />
+</head>
+<body>
+  <button id="menu-button" class="menu-button">☰</button>
+
+  <div class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <h2 id="user-greeting">Olá</h2>
+    </div>
+    <ul>
+      <li><a href="dashboard.html" style="color: #007bff; font-weight: bold;">← Voltar aos Lugares</a></li> <li><a href="animal-lists.html" id="animal-lists-link">Listas de Animais</a></li>
+      <li><a href="animal.html" id="animal-management-link">Gerenciar Animais</a></li>
+      <li><button id="login-logout-btn">Entrar</button></li>
+    </ul>
+  </div>
+
+  <div class="main-content" id="main-content">
+    <div class="header">
+      <button id="create-section">Cadastrar nova câmera</button>
+      <button id="btn-view-charts" style="background-color: #f39c12; margin-left: 15px;">📊 Ver Relatórios</button>
+    </div>
+    <div class="sections" id="sections">
+      <p>Você não tem nenhuma câmera cadastrada neste lugar.</p>
+    </div>
+  </div>
+
+  <div id="create-section-modal" class="modal" style="display:none;">
+    <div class="modal-content">
+      <span id="close-modal" class="close-button">&times;</span>
+      <h2>Cadastrar nova câmera</h2>
+      <form id="create-section-form">
+  <label for="section-name">Nome da Câmera:</label><br/>
+  <input type="text" id="section-name" name="section-name" required /><br/><br/>
+  
+  <label for="animal-list">Lista de Animais:</label><br/>
+  <select id="animal-list" name="animal-list" required>
+    </select><br/><br/>
+
+  <label for="latitude">Latitude:</label><br/>
+  <input type="text" id="latitude" name="latitude" placeholder="Ex: -23.5505" required /><br/><br/>
+  
+  <label for="longitude">Longitude:</label><br/>
+  <input type="text" id="longitude" name="longitude" placeholder="Ex: -46.6333" required /><br/><br/>
+  
+  <button type="submit">Criar Câmera</button>
+</form>
+    </div>
+  </div>
+  
+  <script src="js/session.js"></script>
+</body>
+</html>

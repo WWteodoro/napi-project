@@ -1,0 +1,127 @@
+generator client {
+  provider   = "prisma-client-js"
+}
+
+datasource db {
+provider = "sqlite"
+url      = env("DATABASE_URL")
+}
+
+model User {
+  id             String          @id @default(uuid())
+  name           String          @unique
+  password       String
+  sessions       Session[]
+  notes          Note[]
+  sessionMembers SessionMember[]
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+}
+
+model Place{
+  id  String  @id @default(uuid())
+  name           String @unique
+  sessions  Session[]
+  createdAt      DateTime        @default(now())
+}
+
+model Session {
+  id             String          @id @default(uuid())
+  name           String
+  userId         String
+  user           User            @relation(fields: [userId], references: [id])
+  videos         Video[]
+  animalListId   String
+  animalList     AnimalList      @relation(fields: [animalListId], references: [id], onDelete: Cascade)
+  sessionMembers SessionMember[]
+  totalVideos    Int             @default(0)
+  processedVideos Int            @default(0)
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+  placeId String
+  place Place? @relation(fields: [placeId], references: [id], onDelete: Cascade)
+  latitude        String
+  longitude       String
+}
+
+model Video {
+  id            String         @id @default(uuid())
+  url           String
+  sessionId     String
+  session       Session        @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  hasAnimals    Boolean
+  isAnnotated   Boolean        @default(false)
+  frameStride   Int            @default(1)
+  totalFrames   Int
+  fps           Float
+  boundingBoxes BoundingBox[]
+  noteRelation  Note?
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+}
+
+model BoundingBox {
+  id           String           @id @default(uuid())
+  videoId      String
+  video        Video            @relation(fields: [videoId], references: [id], onDelete: Cascade)
+  time         Float
+  x0           Float
+  y0           Float
+  x1           Float
+  y1           Float
+  confidence   Float
+  createdAt    DateTime         @default(now())
+  updatedAt    DateTime         @updatedAt
+}
+
+model Note {
+  id               String           @id @default(uuid())
+  quantity         Float            
+  dateTime         String
+  //location         String
+  content          String
+  animal           String
+  userId           String
+  time Float
+  user             User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  videoId          String           @unique
+  video            Video            @relation(fields: [videoId], references: [id], onDelete: Cascade)
+  createdAt        DateTime         @default(now())
+  updatedAt        DateTime         @updatedAt
+}
+
+model Animal {
+  id String @id @default(uuid())
+  name String
+  member animalMember[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model AnimalList {
+  id String @id @default(uuid())
+  name String
+  sessions Session[]
+  member animalMember[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model animalMember {
+  id String @id @default(uuid())
+  animalId String
+  animal Animal @relation(fields: [animalId], references: [id], onDelete: Cascade)
+  animalListId String
+  animalList AnimalList @relation(fields: [animalListId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model SessionMember {
+  id         String   @id @default(uuid())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id])
+  sessionId  String
+  session    Session  @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  createdAt  DateTime @default(now())
+}

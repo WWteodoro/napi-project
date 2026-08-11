@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>Listas de Animais</title>
+  <link rel="stylesheet" href="css/animal-lists.css" />
+  <script defer src="js/animal-lists.js"></script>
+</head>
+<body>
+  <div class="sidebar">
+    <h2>Menu</h2>
+    <ul>
+      <li><a href="dashboard.html">Início</a></li>
+      <li><a href="animal-lists.html" class="active">Listas de Animais</a></li>
+      <li><a href="animal.html">Gerenciar Animais</a></li>
+    </ul>
+  </div>
+
+  <div class="content">
+    <h1>Listas de Animais</h1>
+
+    <div class="search-bar">
+      <input type="text" id="searchInput" placeholder="Buscar lista por nome..." />
+      <button id="searchButton">Buscar</button>
+    </div>
+
+    <form id="newListForm">
+      <input type="text" id="name" placeholder="Nome da nova lista" required />
+      <button type="submit">Criar Lista</button>
+    </form>
+
+    <ul id="animalLists"></ul>
+  </div>
+
+  <div id="animalBox" class="animal-box hidden">
+  <div class="box-content">
+    <h2>Adicionar Animal</h2>
+
+    <input type="text" id="boxSearchInput" placeholder="Buscar animal por nome..." />
+    <button id="boxSearchBtn">Buscar</button>
+
+    <form id="boxNewAnimalForm">
+      <input type="text" id="boxNewAnimalName" placeholder="Nome do novo animal" required />
+      <button type="submit">Cadastrar Animal</button>
+    </form>
+
+    <ul id="boxAnimalList"></ul>
+
+    <button id="closeAnimalBox">X</button>
+  </div>
+</div>
+
+</body>
+</html>
